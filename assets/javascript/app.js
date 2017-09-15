@@ -6,6 +6,7 @@ var topics = ["voltorb", "diglett", "gallade", "vulpix", "hitmonchan", "pidgey",
 				  "totodile", "skarmory", "kadabra", "chansey", "dunsparce", "butterfree",
 				  "tropius", "starmie", "jirachi", "dedenne", "flabebe"];
 
+// Create buttons at the top of the page, one for each item in "topics" array
 function updateButtons() {
 	$("#buttons").empty();
 	for (var i=0; i<topics.length; i++) {
@@ -16,22 +17,26 @@ function updateButtons() {
 
 updateButtons();
 
-
+// When the submit button is clicked to add a new item
 $("#submit").on("click", function(event) {
 	
 	event.preventDefault();
 
-	if ($("#search")[0].value != "") {
+	if ($("#search")[0].value != "") { // Prevent user from submitting empty box
 		var newPokemon = $("#search").val().trim();
-		topics.push(newPokemon);
+		topics.push(newPokemon); // Add new search term to topics list
 		updateButtons();
-		$("#search")[0].value = "";
+		$("#search")[0].value = ""; // Clear input field
 	}
 });
 
+// Whenever a button is clicked
 $("body").on("click", ".button", function() {
-	if ($("#quantity")[0].value > 20) {
+	if ($("#quantity")[0].value > 20) { // Make sure quantity doesn't exceed 20
 		$("#quantity")[0].value = 20;
+	}
+	if ($("#quantity")[0].value < 1) { // Make sure quantity is at least 1
+		$("#quantity")[0].value = 1;
 	}
 	limit = $("#quantity")[0].value;
 	var pokeName = this.value
@@ -47,23 +52,26 @@ $("body").on("click", ".button", function() {
     	for (var i=0; i<response.data.length; i++) {
     		$("#images").append("<div class='imagecontainer'><img class='picture' src='" + 
     			response.data[i].images.fixed_width_still.url +
-    			"' name='0'>Rating: " + response.data[i].rating + "</div>");
+    			"' moving='0'>Rating: " + response.data[i].rating + "</div>");
     	}
     });
 });
 
+// Whenever a picture is clicked
 $("body").on("click", ".picture", function() {
 	
 	var src = $(this).attr('src');
 
-	if (this.name == 0) {
+	// If the picture is still, make it move
+	if (this.moving == 0) {
 		$(this).attr('src', src.replace('w_s.gif', 'w.gif'));
 
-		this.name = 1;
+		this.moving = 1;
 	}
+	// If the picture is moving, make it still
 	else {
 		$(this).attr('src', src.replace('w.gif', 'w_s.gif'));
 
-		this.name = 0;
+		this.moving = 0;
 	}
 });
